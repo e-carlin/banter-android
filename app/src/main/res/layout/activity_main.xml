@@ -7,6 +7,12 @@
     android:background="#E0E0E0"
     tools:context="com.banter.banter.MainActivity">
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_accounts"
         android:layout_width="match_parent"
