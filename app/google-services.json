@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "13426491399",
+    "firebase_url": "https://banter-81a54.firebaseio.com",
+    "project_id": "banter-81a54",
+    "storage_bucket": "banter-81a54.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:13426491399:android:31fa02b0376627ed",
+        "android_client_info": {
+          "package_name": "com.banter.banter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "13426491399-n5abila4ke0t9m6qfqoj3orkq5nspvif.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.banter.banter",
+            "certificate_hash": "dfc51ffbeded88f1d96e4531a9e5fee36cb01201"
+          }
+        },
+        {
+          "client_id": "13426491399-nhdh5b4pb4spe4pnfb8d2t63ufvdemu5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoBHL9jRR6BHuOQDRM9e9JESz9YgX2MbM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "13426491399-nhdh5b4pb4spe4pnfb8d2t63ufvdemu5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
