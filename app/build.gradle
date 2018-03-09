@@ -11,9 +11,16 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            buildConfigField 'String', 'PLAID_PUBLIC_KEY', '"74912a00575badb2f1b0f1b8bdfde2"'
+            buildConfigField 'String', 'PLAID_CLIENT_ID', '"59dd926b4e95b872dbbb6cdf"'
+            buildConfigField 'String', 'PLAID_SECRET_KEY', '"2e17db39ac71ebd3810b276801569e"' //Plaid TODO: Move secret to a better location (i.e. env)
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField 'String', 'PLAID_PUBLIC_KEY', '"?????"'
         }
     }
     compileOptions {
@@ -23,53 +30,10 @@ android {
 }
 
 dependencies {
-
-    //    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    //    implementation 'com.android.support:appcompat-v7:26.1.0'
-
-    //    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-
-    //    testImplementation 'junit:junit:4.12'
-
-    //    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-
-    //    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-
-    //
-
-    //    // Firestore
-
-    //    compile 'com.google.firebase:firebase-firestore:11.8.0'
-
-    //
-
-    //    // Other Firebase/Play services deps
-
-    //    compile 'com.google.firebase:firebase-auth:11.8.0'
-
-    //    compile 'com.google.android.gms:play-services-auth:11.8.0'
-
-    //
-
-    //    /// FirebaseUI (for authentication)
-
-    //    compile 'com.firebaseui:firebase-ui-auth:3.2.2'
-
-    //
-
-    //    // Android architecture components
-
-    //    compile 'android.arch.lifecycle:runtime:1.1.0'
-
-    //    compile 'android.arch.lifecycle:extensions:1.1.0'
-
-    //    annotationProcessor 'android.arch.lifecycle:compiler:1.1.0'
-
     // Firestore
     implementation 'com.android.support:support-v4:27.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.firebase:firebase-firestore:11.8.0'
-
 
     // Other Firebase/Play services deps
     compile 'com.google.firebase:firebase-auth:11.8.0'
@@ -96,7 +60,16 @@ dependencies {
     compile 'android.arch.lifecycle:extensions:1.1.0'
     annotationProcessor 'android.arch.lifecycle:compiler:1.1.0'
 
+    //Volley for REST API calls
+    compile 'com.android.volley:volley:1.1.0'
+
+    //Plaid for financial information
+    compile group: 'com.plaid', name: 'plaid-java', version: '2.2.0'
+
+
     // Third-party libraries
+    compileOnly "org.projectlombok:lombok:1.16.20"
+    annotationProcessor 'org.projectlombok:lombok:1.16.20'
 
     //    compile 'me.zhanghai.android.materialratingbar:library:1.2.0'
 

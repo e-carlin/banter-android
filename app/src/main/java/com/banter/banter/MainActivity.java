@@ -1,23 +1,20 @@
 package com.banter.banter;
 
-import android.support.design.widget.Snackbar;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.banter.banter.adapter.AccountAdapter;
-import com.banter.banter.model.Account;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.banter.banter.model.document.AccountsDocument;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 
 import butterknife.BindView;
@@ -32,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.recycler_accounts)
     RecyclerView accountList;
 
+    @BindView(R.id.button_add_account)
+    Button add_account_button;
+
     private FirebaseFirestore db;
     private AccountAdapter accountAdapter;
     LinearLayoutManager linearLayoutManager;
@@ -41,21 +41,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        init();
-        getAccountList();
+        add_account_button.setOnClickListener((View v) -> {
+            startActivity(new Intent(this, PlaidAddAccountActivity.class));
+        });
+//        init();
+//        getAccountList();
     }
 
     private void init(){
         linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         accountList.setLayoutManager(linearLayoutManager);
         db = FirebaseFirestore.getInstance();
+
+        add_account_button.setOnClickListener((View v) -> {
+            startActivity(new Intent(this, PlaidAddAccountActivity.class));
+        });
     }
 
     private void getAccountList(){
         Query query = db.collection("Accounts");
 
-        FirestoreRecyclerOptions<Account> response = new FirestoreRecyclerOptions.Builder<Account>()
-                .setQuery(query, Account.class)
+        FirestoreRecyclerOptions<AccountsDocument> response = new FirestoreRecyclerOptions.Builder<AccountsDocument>()
+                .setQuery(query, AccountsDocument.class)
                 .build();
 
         accountAdapter = new AccountAdapter(response) {
@@ -88,13 +95,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        accountAdapter.startListening();
+//        accountAdapter.startListening(); //TODO: add back in
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        accountAdapter.stopListening();
+//        accountAdapter.stopListening(); //TODO: add back in
     }
 
 }
