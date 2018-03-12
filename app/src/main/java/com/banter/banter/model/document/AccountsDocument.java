@@ -1,6 +1,10 @@
 package com.banter.banter.model.document;
 
+import android.support.annotation.Keep;
+
 import com.banter.banter.model.document.attribute.InstitutionAttribute;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.ServerTimestamp;
 
 import lombok.Data;
 import lombok.ToString;
@@ -14,16 +18,17 @@ import java.util.List;
 public class AccountsDocument {
 
     private String userId;
-    private Date createdAt;
+    @ServerTimestamp private Date createdAt;
     private List<InstitutionAttribute> institutions;
 
     public AccountsDocument() {
         this.institutions = new ArrayList<>();
     }
 
-
-    public String getUserId() { return this.userId; }
-    public void setUserId(String userId) { this.userId = userId; }
+    public AccountsDocument(String userId) {
+        this.userId = userId;
+        this.institutions = new ArrayList<>();
+    }
 
     public void addInstitutionAttribute(InstitutionAttribute institutionAttribute) {
         this.institutions.add(institutionAttribute);

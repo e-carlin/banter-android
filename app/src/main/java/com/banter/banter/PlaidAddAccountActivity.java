@@ -12,13 +12,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.android.volley.Response;
-import com.banter.banter.exceptions.PlaidExchangePublicTokenException;
-import com.banter.banter.model.document.InstitutionTokenDocument;
 import com.banter.banter.model.response.PlaidLinkResponse;
-import com.banter.banter.repository.InstitutionTokenRepository;
-import com.banter.banter.service.InstitutionTokenService;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.banter.banter.service.AddAccountService;
 
 import org.json.JSONObject;
 
@@ -28,9 +23,7 @@ import java.util.HashMap;
 public class PlaidAddAccountActivity extends AppCompatActivity {
     private final static String TAG = "PlaidAddAccountActivity";
 
-    private InstitutionTokenRepository institutionTokenRepository;
-    private InstitutionTokenService institutionTokenService;
-    private FirebaseUser currentUser;
+    private AddAccountService addAccountService;
 
 
     @Override
@@ -38,10 +31,7 @@ public class PlaidAddAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plaid_add_account);
 
-        institutionTokenRepository = new InstitutionTokenRepository();
-        institutionTokenService = new InstitutionTokenService();
-
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        addAccountService = new AddAccountService();
 
         openPlaidAddAccountWebView();
     }
@@ -69,16 +59,13 @@ public class PlaidAddAccountActivity extends AppCompatActivity {
 
                     if (action.equals("connected")) {
                         //Success! We got the account details from Plaid
-                        try {
-                            PlaidLinkResponse plaidLinkResponse = new PlaidLinkResponse(linkData);
-                            //TODO: Before building and adding document check to make sure it isn't a duplicate
-                            InstitutionTokenDocument institutionTokenDocument = institutionTokenService.getInstitutionTokenDocument(plaidLinkResponse.getPublicToken(), currentUser.getUid());
-                            Log.d(TAG, "Institution token document: "+institutionTokenDocument);
-                            institutionTokenRepository.addInstitutionTokenDocument(institutionTokenDocument);
-                        } catch (PlaidExchangePublicTokenException e) {
-                            //TODO: Display to the user that there was an error
-                            e.printStackTrace();
-                        }
+                        Log.e(TAG, "Connected to Link. Starting addAccountService");
+                        PlaidLinkResponse plaidLinkResponse = new PlaidLinkResponse(linkData);
+                        Intent addAccountIntent = new Intent(PlaidAddAccountActivity.this, AddAccountService.class);
+                        addAccountIntent.putExtra("plaidLinkResponse", plaidLinkResponse);
+                        PlaidAddAccountActivity.this.startService(addAccountIntent);
+                        //TODO: Alert the user that we've added their account and redirect them to the mainActivity
+                        startActivity(new Intent(PlaidAddAccountActivity.this, MainActivity.class));
 
                     } else if (action.equals("exit")) {
                         // User exited
@@ -194,9 +181,9 @@ public class PlaidAddAccountActivity extends AppCompatActivity {
 
 
     //     Parse a Link redirect URL querystring into a HashMap for easy manipulation and access
-    private HashMap<String,String> parseLinkUriData(Uri linkUri) {
-        HashMap<String,String> linkData = new HashMap<>();
-        for(String key : linkUri.getQueryParameterNames()) {
+    private HashMap<String, String> parseLinkUriData(Uri linkUri) {
+        HashMap<String, String> linkData = new HashMap<>();
+        for (String key : linkUri.getQueryParameterNames()) {
             linkData.put(key, linkUri.getQueryParameter(key));
         }
         return linkData;

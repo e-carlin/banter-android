@@ -4,7 +4,8 @@ import lombok.Data;
 import lombok.ToString;
 
 @Data
-@ToString(exclude = "accessToken")
+//@ToString(exclude = "accessToken")
+@ToString //TODO: Use exclude toString. AccessToken visible for just testing
 public class InstitutionTokenDocument {
 
 

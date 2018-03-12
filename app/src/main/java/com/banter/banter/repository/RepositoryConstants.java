@@ -6,4 +6,5 @@ package com.banter.banter.repository;
 
 public interface RepositoryConstants {
      String ACCOUNTS_COLLECTION_REF = "accounts";
+     String INSTITUTION_TOKENS_COLLECTION_REF = "institutionTokens";
 }

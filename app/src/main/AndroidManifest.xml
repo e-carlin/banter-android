@@ -17,6 +17,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".PlaidAddAccountActivity"></activity>
+        <service
+            android:name=".service.AddAccountService"
+            android:exported="false"/>
     </application>
 
 </manifest>

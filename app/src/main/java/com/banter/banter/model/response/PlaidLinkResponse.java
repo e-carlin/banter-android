@@ -1,5 +1,6 @@
 package com.banter.banter.model.response;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import lombok.Data;
@@ -10,7 +11,8 @@ import lombok.ToString;
  */
 @Data
 @ToString
-public class PlaidLinkResponse {
+//@SuppressWarnings("serial")
+public class PlaidLinkResponse implements Serializable{
     private String linkSessionId;
     private String publicToken;
     private String institutionName;
