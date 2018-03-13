@@ -64,7 +64,6 @@ public class PlaidAddAccountActivity extends AppCompatActivity {
                         Intent addAccountIntent = new Intent(PlaidAddAccountActivity.this, AddAccountService.class);
                         addAccountIntent.putExtra("plaidLinkResponse", plaidLinkResponse);
                         PlaidAddAccountActivity.this.startService(addAccountIntent);
-                        //TODO: Alert the user that we've added their account and redirect them to the mainActivity
                         startActivity(new Intent(PlaidAddAccountActivity.this, MainActivity.class));
 
                     } else if (action.equals("exit")) {
@@ -91,22 +90,6 @@ public class PlaidAddAccountActivity extends AppCompatActivity {
         });
     }
 
-    private Response.ErrorListener getResponseErrorListener() {
-        return error -> {
-            //TODO: Maybe handle the add duplicate account different that other possible errors. We'll need to change api to send an error
-            Log.e(TAG, "Error sending plaid public token to our api: " + error);
-            try {
-                if (error.networkResponse != null && error.networkResponse.data != null) {
-                    Log.e(TAG, "Error message: " + new String(error.networkResponse.data, "UTF-8"));
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } finally {
-                showSendPublicTokenErrorAlerDialog();
-            }
-        };
-    }
-
     private void showSendPublicTokenErrorAlerDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle("Error saving your account");
@@ -127,13 +110,6 @@ public class PlaidAddAccountActivity extends AppCompatActivity {
                     }
                 });
         alertDialog.show();
-    }
-
-    private Response.Listener<JSONObject> getResponseListener() {
-        return response -> {
-            Log.i(TAG, "Response from adding account is: " + response.toString());
-            this.startActivity(new Intent(this, MainActivity.class));
-        };
     }
 
     private WebView getConfiguredPlaidLinkWebView() {

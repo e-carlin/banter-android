@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.banter.banter.model.document.InstitutionTokenDocument;
 import com.banter.banter.model.document.attribute.InstitutionAttribute;
@@ -13,7 +14,7 @@ import com.banter.banter.repository.InstitutionTokenRepository;
 import com.banter.banter.repository.listener.DoesUserHaveInstitutionListener;
 import com.banter.banter.service.listener.AddDocumentListener;
 import com.banter.banter.service.listener.CreateInstitutionAttributeListener;
-import com.banter.banter.service.listener.GetInstitutionTokenDocumentListener;
+import com.banter.banter.service.listener.CreateInstitutionTokenDocumentListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -21,7 +22,8 @@ import com.google.firebase.auth.FirebaseUser;
 /**
  * Created by evan.carlin on 3/12/2018.
  * <p>
- * TODO: This class is classic callback hell look at something like RxJava to help alleviate this
+ * TODO: This onHandleIntent is classic callback hell look at something like RxJava to help alleviate this
+ * TODO: We are just alerting the user with Toasts. Do we want something more?
  */
 
 public class AddAccountService extends IntentService {
@@ -50,14 +52,15 @@ public class AddAccountService extends IntentService {
         PlaidLinkResponse plaidLinkResponse = (PlaidLinkResponse) intent.getSerializableExtra("plaidLinkResponse");
         accountsRepository.doesUserHaveInstitution(this.currentUser.getUid(), plaidLinkResponse.getInstitutionId(), new DoesUserHaveInstitutionListener() {
             @Override
-            public void queryError() {
-                //TODO: Aler the user
-                Log.e(TAG, "Query error asking if the user has already added this institution. TODO: Alert user");
+            public void onFailure(String errorMessage) {
+                //There was an error determining if the user already has already added the institution they are trying to add
+                Log.e(TAG, "Error in doesUserHaveInstitution. " + errorMessage);
+                Toast.makeText(getApplicationContext(), "Error saving your account data. Please try again.", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void userHasInstitution() {
-                //TODO: alert the user that they tried to add a duplicate account
+                Toast.makeText(getApplicationContext(), "You have already added this institution. No need to add it again.", Toast.LENGTH_LONG).show();
                 Log.e(TAG, "The user has already added an institution with ins_id = " + plaidLinkResponse.getInstitutionId() + " name: " + plaidLinkResponse.getInstitutionName() + " TODO: Alert user");
             }
 
@@ -66,10 +69,10 @@ public class AddAccountService extends IntentService {
                 System.out.println("User does not have institution. Adding...");
                 //Needs to be done async becasuse firebase listeners are alway called on the ui thread
                 // So even though this is run in an IntentService which should put it on its own thread it we need to use async
-                institutionTokenDocumentService.getInstitutionTokenDocument(plaidLinkResponse.getPublicToken(), currentUser.getUid(), new GetInstitutionTokenDocumentListener() {
+                institutionTokenDocumentService.createInstitutionTokenDocument(plaidLinkResponse.getPublicToken(), currentUser.getUid(), new CreateInstitutionTokenDocumentListener() {
                     @Override
                     public void onSuccess(InstitutionTokenDocument institutionTokenDocument) { //We got a new InstitutionTokenDocument
-                        Log.d(TAG, "Created a new InstitutionTokenDocument for the user: "+institutionTokenDocument);
+                        Log.d(TAG, "Created a new InstitutionTokenDocument for the user: " + institutionTokenDocument);
                         institutionAttributeService.createInstitutionAttribute(
                                 institutionTokenDocument.getItemId(),
                                 plaidLinkResponse.getInstitutionName(),
@@ -78,7 +81,7 @@ public class AddAccountService extends IntentService {
                                 new CreateInstitutionAttributeListener() {
                                     @Override
                                     public void onSuccess(InstitutionAttribute institutionAttribute) { //The institution attribute was successfully created
-                                        Log.d(TAG, "Created a new institutionAttribute for the user: "+institutionAttribute);
+                                        Log.d(TAG, "Created a new institutionAttribute for the user: " + institutionAttribute);
                                         accountsRepository.addInstitutionAttribute(currentUser.getUid(), institutionAttribute, new AddDocumentListener() {
                                             @Override
                                             public void onSuccess() {
@@ -87,7 +90,7 @@ public class AddAccountService extends IntentService {
                                                 institutionTokenRepository.addInstitutionTokenDocument(institutionTokenDocument, new AddDocumentListener() {
                                                     @Override
                                                     public void onSuccess() {
-                                                        //TODO: Alert the user
+                                                        Toast.makeText(getApplicationContext(), "Success adding "+plaidLinkResponse.getInstitutionName(), Toast.LENGTH_LONG).show();
                                                         Log.w(TAG, "SUCCESS. We added both the institutionTokenDocument and the new InstitutionAttribute");
                                                     }
 
@@ -96,24 +99,29 @@ public class AddAccountService extends IntentService {
                                                         Log.e(TAG, "FATAL error. We should never get here. In this a new institutionAttribute for a new institution" +
                                                                 "for a user has been added to the db but there was a failure adding the corresponsding InstitutionTokenDocument");
                                                         //TODO: Delete the the institutionAttribute
-                                                        //TODO: Alert the user
+                                                        //TODO: Change the toast
+                                                        Toast.makeText(getApplicationContext(), "FATAL error adding account. Please tell Evan you saw this.", Toast.LENGTH_LONG).show();
                                                     }
                                                 });
 
                                             }
 
                                             @Override
-                                            public void onFailure(String errorMessage) { //Failure adding InstitutionAttribute
-                                                //TODO: Alert user
+                                            public void onFailure(String errorMessage) {
+                                                //Failure adding InstitutionAttribute. At this state the db knows nothing about the users attempt to add an institution
+                                                // They can safely try again.
                                                 Log.w(TAG, "Error adding new institution");
+                                                Toast.makeText(getApplicationContext(), "Error saving your account data. Please try again.", Toast.LENGTH_LONG).show();
                                             }
                                         });
                                     }
 
                                     @Override
                                     public void onFailure(String errorMessage) {
-                                        //TODO: Display error to user
-                                        Log.e(TAG, "Failure creating institutionAttribute: " + errorMessage + " TODO: implement display error to user");
+                                        //Failure creating institutionAttribute. This probably means there was some sort of networking error trying to get
+                                        // balances for the new accounts
+                                        Log.e(TAG, "Failure creating institutionAttribute: " + errorMessage);
+                                        Toast.makeText(getApplicationContext(), "Error saving your account data. Please try again.", Toast.LENGTH_LONG).show();
                                     }
                                 }
                         );
@@ -122,8 +130,9 @@ public class AddAccountService extends IntentService {
 
                     @Override
                     public void onFailure(String errorMessage) {
-                        Log.e(TAG, "Could not getInstitutionTokenDocument: " + errorMessage + " TODO: Alert user");
-                        //TODO: Alert the user there was an error
+                        //Failure creating institutionTokenDocument
+                        Log.e(TAG, "Could not createInstitutionTokenDocument: " + errorMessage + " TODO: Alert user");
+                        Toast.makeText(getApplicationContext(), "Error saving your account data. Please try again.", Toast.LENGTH_LONG).show();
                     }
                 });
             }

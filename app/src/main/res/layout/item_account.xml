@@ -14,7 +14,7 @@
         android:text="An Account" />
 
     <LinearLayout
-        android:id="@+id/view_empty"
+        android:id="@+id/view_no_account_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">

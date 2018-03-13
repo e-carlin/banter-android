@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.banter.banter.model.document.InstitutionTokenDocument;
 import com.banter.banter.service.listener.ExchangePlaidPublicTokenListener;
-import com.banter.banter.service.listener.GetInstitutionTokenDocumentListener;
+import com.banter.banter.service.listener.CreateInstitutionTokenDocumentListener;
 import com.plaid.client.response.ItemPublicTokenExchangeResponse;
 
 /**
@@ -20,7 +20,7 @@ public class InstitutionTokenDocumentService {
         this.plaidClientService = new PlaidClientService();
     }
 
-    public void getInstitutionTokenDocument(String publicToken, String userId, GetInstitutionTokenDocumentListener listener) {
+    public void createInstitutionTokenDocument(String publicToken, String userId, CreateInstitutionTokenDocumentListener listener) {
         Log.d(TAG, "Getting institution token document publicToken: "+publicToken+" userId: "+userId);
         plaidClientService.exchangePublicToken(publicToken, new ExchangePlaidPublicTokenListener() {
             @Override

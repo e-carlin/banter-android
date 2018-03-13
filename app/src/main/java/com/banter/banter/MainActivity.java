@@ -3,19 +3,16 @@ package com.banter.banter;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.banter.banter.adapter.AccountAdapter;
 import com.banter.banter.model.document.AccountsDocument;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+import com.banter.banter.repository.AccountsRepository;
+import com.banter.banter.repository.listener.GetDocumentListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,82 +23,62 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
-    @BindView(R.id.recycler_accounts)
-    RecyclerView accountList;
-
     @BindView(R.id.button_add_account)
-    Button add_account_button;
+    Button addAccountButton;
 
-    private FirebaseFirestore db;
-    private AccountAdapter accountAdapter;
-    LinearLayoutManager linearLayoutManager;
+    @BindView(R.id.view_no_account_data)
+    View viewNoAccountData;
+
+    private AccountsRepository accountsRepository;
+
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        add_account_button.setOnClickListener((View v) -> {
+        this.viewNoAccountData.setVisibility(View.INVISIBLE);
+        this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        this.accountsRepository = new AccountsRepository();
+
+        this.progressBar.setVisibility(View.VISIBLE);
+
+        this.addAccountButton.setOnClickListener((View v) -> {
             startActivity(new Intent(this, PlaidAddAccountActivity.class));
         });
-//        init();
-//        getAccountList();
+
+        getAccountsData();
     }
 
-    private void init(){
-        linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-        accountList.setLayoutManager(linearLayoutManager);
-        db = FirebaseFirestore.getInstance();
-
-        add_account_button.setOnClickListener((View v) -> {
-            startActivity(new Intent(this, PlaidAddAccountActivity.class));
-        });
-    }
-
-    private void getAccountList(){
-        Query query = db.collection("Accounts");
-
-        FirestoreRecyclerOptions<AccountsDocument> response = new FirestoreRecyclerOptions.Builder<AccountsDocument>()
-                .setQuery(query, AccountsDocument.class)
-                .build();
-
-        accountAdapter = new AccountAdapter(response) {
+    //TODO: This is where I am working
+    private void getAccountsData() {
+        this.accountsRepository.listenToMostRecentAccountsDocument(currentUser.getUid(), new GetDocumentListener() {
             @Override
-            public void onDataChanged() {
-                Log.d(TAG, "DataChangedCalled");
-                Log.d(TAG, "Count: "+getItemCount());
-                if(getItemCount() == 0) {
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-                else {
-                    progressBar.setVisibility(View.GONE);
-                }
+            public void onSuccess(Object document) {
+                progressBar.setVisibility(View.INVISIBLE);
+                Log.w(TAG, "SUCCESSL "+(AccountsDocument)document);
             }
-        };
-        accountAdapter.notifyDataSetChanged();
-        accountList.setAdapter(accountAdapter);
-    }
 
-    public class AccountsHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.account_item_name)
-        TextView textName;
+            @Override
+            public void onEmptyResult() {
+                progressBar.setVisibility(View.INVISIBLE);
+                viewNoAccountData.setVisibility(View.VISIBLE);
+                Log.w(TAG, "Empty result");
+            }
 
-        public AccountsHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-//        accountAdapter.startListening(); //TODO: add back in
+            @Override
+            public void onFailure(String errorMessage) {
+                Log.e(TAG, "Failure");
+            }
+        });
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-//        accountAdapter.stopListening(); //TODO: add back in
+    public void onResume() {
+        super.onResume();
+        this.progressBar.setVisibility(View.VISIBLE);
+        getAccountsData();
     }
-
 }

@@ -6,7 +6,7 @@ import com.banter.banter.model.document.InstitutionTokenDocument;
  * Created by evan.carlin on 3/13/2018.
  */
 
-public interface GetInstitutionTokenDocumentListener {
+public interface CreateInstitutionTokenDocumentListener {
     void onSuccess(InstitutionTokenDocument institutionTokenDocument);
     void onFailure(String errorMessage);
 }

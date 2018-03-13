@@ -7,5 +7,5 @@ package com.banter.banter.repository.listener;
 public interface DoesUserHaveInstitutionListener {
     void userHasInstitution();
     void userDoesNotHaveInstitution();
-    void queryError();
+    void onFailure(String errorMessage);
 }
