@@ -1,4 +1,4 @@
-package com.banter.banter.repository;
+package com.banter.banter.repository.listener;
 
 /**
  * Created by evan.carlin on 3/12/2018.
