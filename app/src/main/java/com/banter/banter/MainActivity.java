@@ -104,13 +104,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add_account:
-                // User chose the "Settings" item, show the app settings UI...
+                // User chose the "add account" item. take them to the add account activity
                 startActivity(new Intent(this, PlaidAddAccountActivity.class));
                 return true;
             default:
