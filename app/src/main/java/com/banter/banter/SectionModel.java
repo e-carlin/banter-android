@@ -1,21 +1,23 @@
 package com.banter.banter;
 
-import java.util.ArrayList;
+import com.banter.banter.model.document.attribute.AccountAttribute;
+
+import java.util.List;
 
 public class SectionModel {
-    private String sectionLabel;
-    private ArrayList<String> itemArrayList;
+    private String accountType;
+    private List<AccountAttribute> accounts;
 
-    public SectionModel(String sectionLabel, ArrayList<String> itemArrayList) {
-        this.sectionLabel = sectionLabel;
-        this.itemArrayList = itemArrayList;
+    public SectionModel(String accountType, List<AccountAttribute> accounts) {
+        this.accountType = accountType;
+        this.accounts = accounts;
     }
 
-    public String getSectionLabel() {
-        return sectionLabel;
+    public String getAccountType() {
+        return accountType;
     }
 
-    public ArrayList<String> getItemArrayList() {
-        return itemArrayList;
+    public List<AccountAttribute> getAccounts() {
+        return accounts;
     }
 }

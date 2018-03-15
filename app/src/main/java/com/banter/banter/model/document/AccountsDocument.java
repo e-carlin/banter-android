@@ -1,5 +1,6 @@
 package com.banter.banter.model.document;
 
+import com.banter.banter.model.document.attribute.AccountAttribute;
 import com.banter.banter.model.document.attribute.InstitutionAttribute;
 import com.google.firebase.firestore.ServerTimestamp;
 
@@ -8,6 +9,7 @@ import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Data
@@ -32,18 +34,21 @@ public class AccountsDocument {
         this.institutions.add(institutionAttribute);
     }
 
-    public List<String> getAccountTypes() {
-        List<String> accountTypes = new ArrayList<>();
+    public HashMap<String, List<AccountAttribute>> getAccountsGroupedByType() {
+        HashMap<String, List<AccountAttribute>> finalGrouping = new HashMap<>();
 
-        //For each institution, get a list of the accountTypes in the institution, add them to our list if they aren't already present in our list
-        for (InstitutionAttribute institution : institutions) {
-            List<String> institutionAccountTypes = institution.getAccountTypes();
-            for (String institutionAccountType : institutionAccountTypes) {
-                if (!accountTypes.contains(institutionAccountType)) {
-                    accountTypes.add(institutionAccountType);
+        for(InstitutionAttribute institution : institutions) {
+            HashMap<String, List<AccountAttribute>> institutionsAccounts = institution.getAccountsGroupedByType();
+            for(String key : institutionsAccounts.keySet()) {
+                //It would be more elegant to use Java map.merge(...) but that requires API level 24
+                if(finalGrouping.containsKey(key)) {
+                    finalGrouping.get(key).addAll(institutionsAccounts.get(key));
+                }
+                else {
+                    finalGrouping.put(key, institutionsAccounts.get(key));
                 }
             }
         }
-        return accountTypes;
+        return finalGrouping;
     }
 }

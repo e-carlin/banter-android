@@ -6,19 +6,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
 
+import com.banter.banter.adapter.AccountsSectionRecyclerViewAdapter;
 import com.banter.banter.model.document.AccountsDocument;
+import com.banter.banter.model.document.attribute.AccountAttribute;
 import com.banter.banter.repository.AccountsRepository;
 import com.banter.banter.repository.listener.GetDocumentListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.sectioned_recycler_view)
     RecyclerView recyclerView;
 
+    @BindView(R.id.my_toolbar) //TODO: Rename
+    Toolbar myToolbar;
+
     private AccountsRepository accountsRepository;
     private FirebaseUser currentUser;
 
@@ -39,12 +44,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("Accounts");
+
         this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
         this.accountsRepository = new AccountsRepository();
 
-        //get enum type passed from MainActivity
         setUpRecyclerView();
         populateRecyclerView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.add_account_menu, menu);
+        return true;
     }
 
     //setup recycler view
@@ -56,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     //populate recycler view
     private void populateRecyclerView() {
-        accountsRepository.listenToMostRecentAccountsDocument(this.currentUser.getUid(), new GetDocumentListener() {
+        accountsRepository.getMostRecentAccountsDocument(this.currentUser.getUid(), new GetDocumentListener() {
             @Override
             public void onSuccess(Object document) {
                 AccountsDocument accountsDocument = (AccountsDocument) document;
@@ -64,16 +78,14 @@ public class MainActivity extends AppCompatActivity {
 
                 List<SectionModel> sectionModels = new ArrayList<>();
 
-                List<String> accountTypes = accountsDocument.getAccountTypes();
-                for (String accountType : accountTypes) {
-                    //TODO: Fill out with actual account data
-                    ArrayList<String> itemArrayList = new ArrayList<>();
-                    for (int j = 1; j <= 10; j++) {
-                        itemArrayList.add("Item " + j);
-                    }
-                    sectionModels.add(new SectionModel(accountType, itemArrayList));
+                HashMap<String, List<AccountAttribute>> accountsGroupedByType = accountsDocument.getAccountsGroupedByType();
+
+                for(String key : accountsGroupedByType.keySet()) {
+                    String label = key.substring(0,1).toUpperCase() + key.substring(1).toLowerCase();
+                    sectionModels.add(new SectionModel(label, accountsGroupedByType.get(key)));
                 }
-                SectionRecyclerViewAdapter adapter = new SectionRecyclerViewAdapter(MainActivity.this, sectionModels);
+
+                AccountsSectionRecyclerViewAdapter adapter = new AccountsSectionRecyclerViewAdapter(MainActivity.this, sectionModels);
                 recyclerView.setAdapter(adapter);
 
             }
@@ -81,29 +93,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onEmptyResult() {
                 Log.e(TAG, "******************************* Empty result");
+                //TODO: Display no accounts added message
             }
 
             @Override
             public void onFailure(String errorMessage) {
                 Log.e(TAG, "**************************** FAILURE: " + errorMessage);
+                //TODO: Display error message
             }
         });
+    }
 
+    
 
-//        ArrayList<SectionModel> sectionModelArrayList = new ArrayList<>();
-//        //for loop for sections
-//        for (int i = 1; i <= 5; i++) {
-//            ArrayList<String> itemArrayList = new ArrayList<>();
-//            //for loop for items
-//            for (int j = 1; j <= 10; j++) {
-//                itemArrayList.add("Item " + j);
-//            }
-//
-//            //add the section and items to array list
-//            sectionModelArrayList.add(new SectionModel("Section " + i, itemArrayList));
-//        }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add_account:
+                // User chose the "Settings" item, show the app settings UI...
+                startActivity(new Intent(this, PlaidAddAccountActivity.class));
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
 
-//        SectionRecyclerViewAdapter adapter = new SectionRecyclerViewAdapter(this, sectionModelArrayList);
-//        recyclerView.setAdapter(adapter);
+        }
     }
 }

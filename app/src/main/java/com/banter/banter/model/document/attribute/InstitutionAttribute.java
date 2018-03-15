@@ -3,6 +3,7 @@ package com.banter.banter.model.document.attribute;
 import lombok.Data;
 import lombok.ToString;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Data
@@ -12,7 +13,7 @@ public class InstitutionAttribute {
     private String itemId;
     private String name;
     private String institutionId;
-    private ArrayList<AccountAttribute> accounts;
+    private List<AccountAttribute> accounts;
 
     public InstitutionAttribute() {
 
@@ -30,18 +31,19 @@ public class InstitutionAttribute {
         this.accounts.add(accountAttribute);
     }
 
-    /**
-     * Create a list of the account types in this InstitutionAttribute
-     * The list contains one entry for each unique account type
-     * @return
-     */
-    public List<String> getAccountTypes() {
-        List<String> accountTypes = new ArrayList<>();
+    public HashMap<String, List<AccountAttribute>> getAccountsGroupedByType() {
+        HashMap<String, List<AccountAttribute>> groupedAccounts = new HashMap<>();
         for(AccountAttribute account : accounts) {
-            if(!accountTypes.contains(account.getType())) {
-                accountTypes.add(account.getType());
+            if(groupedAccounts.containsKey(account.getType())) {
+                List<AccountAttribute> accountGroup = groupedAccounts.get(account.getType());
+                accountGroup.add(account);
+            }
+            else {
+                List<AccountAttribute> accountGroupToAdd = new ArrayList<>();
+                accountGroupToAdd.add(account);
+                groupedAccounts.put(account.getType(), accountGroupToAdd);
             }
         }
-        return accountTypes;
+        return groupedAccounts;
     }
 }

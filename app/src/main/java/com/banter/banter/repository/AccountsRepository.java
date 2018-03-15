@@ -170,6 +170,7 @@ public class AccountsRepository {
         });
     }
 
+    //TODO: This listener persists for the life of the (?) app. Add the activity context to the call to addSnapshotListener() to make it last only the life of the activity
     public void listenToMostRecentAccountsDocument(String userId, GetDocumentListener listener) {
         Query query = accountsCollection.whereEqualTo("userId", userId).orderBy("createdAt", Query.Direction.DESCENDING).limit(1);
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {

@@ -1,4 +1,4 @@
-package com.banter.banter;
+package com.banter.banter.adapter;
 
 
 import android.content.Context;
@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.banter.banter.R;
+import com.banter.banter.SectionModel;
 
 import java.util.List;
 
@@ -16,17 +18,16 @@ import java.util.List;
  * Created by sonu on 24/07/17.
  */
 
-public class SectionRecyclerViewAdapter extends RecyclerView.Adapter<SectionRecyclerViewAdapter.SectionViewHolder> {
+public class AccountsSectionRecyclerViewAdapter extends RecyclerView.Adapter<AccountsSectionRecyclerViewAdapter.SectionViewHolder> {
 
 
     class SectionViewHolder extends RecyclerView.ViewHolder {
-        private TextView sectionLabel, showAllButton;
+        private TextView sectionLabel;
         private RecyclerView itemRecyclerView;
 
         public SectionViewHolder(View itemView) {
             super(itemView);
             sectionLabel = (TextView) itemView.findViewById(R.id.section_label);
-            showAllButton = (TextView) itemView.findViewById(R.id.section_show_all_button);
             itemRecyclerView = (RecyclerView) itemView.findViewById(R.id.item_recycler_view);
         }
     }
@@ -34,21 +35,21 @@ public class SectionRecyclerViewAdapter extends RecyclerView.Adapter<SectionRecy
     private Context context;
     private List<SectionModel> sectionModels;
 
-    public SectionRecyclerViewAdapter(Context context, List<SectionModel> sectionModels) {
+    public AccountsSectionRecyclerViewAdapter(Context context, List<SectionModel> sectionModels) {
         this.context = context;
         this.sectionModels = sectionModels;
     }
 
     @Override
     public SectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.section_custom_row_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.accounts_section_layout, parent, false);
         return new SectionViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(SectionViewHolder holder, int position) {
         final SectionModel sectionModel = sectionModels.get(position);
-        holder.sectionLabel.setText(sectionModel.getSectionLabel());
+        holder.sectionLabel.setText(sectionModel.getAccountType());
 
         //recycler view for items
         holder.itemRecyclerView.setHasFixedSize(true);
@@ -57,11 +58,11 @@ public class SectionRecyclerViewAdapter extends RecyclerView.Adapter<SectionRecy
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.itemRecyclerView.setLayoutManager(linearLayoutManager);
 
-        ItemRecyclerViewAdapter adapter = new ItemRecyclerViewAdapter(context, sectionModel.getItemArrayList());
+        AccountItemRecyclerViewAdapter adapter = new AccountItemRecyclerViewAdapter(context, sectionModel.getAccounts());
         holder.itemRecyclerView.setAdapter(adapter);
 
         //show toast on click of show all button
-        holder.showAllButton.setOnClickListener(v -> Toast.makeText(context, "You clicked on Show All of : " + sectionModel.getSectionLabel(), Toast.LENGTH_SHORT).show());
+//        holder.showAllButton.setOnClickListener(v -> Toast.makeText(context, "You clicked on Show All of : " + sectionModel.getAccountType(), Toast.LENGTH_SHORT).show());
 
     }
 
