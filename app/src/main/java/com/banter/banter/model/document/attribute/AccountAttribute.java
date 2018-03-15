@@ -9,8 +9,8 @@ public class AccountAttribute {
 
     private String id;
     private String name;
-    private String type; //TODO: Maybe make this an enum
-    private String subtype; //TODO: Maybe make this an enum too
+    private String type; //TODO: Maybe make this an enum https://plaid.com/docs/api/#accounts
+    private String subtype; //TODO: Maybe make this an enum too https://plaid.com/docs/api/#accounts
     private AccountBalancesAttribute balances;
 
     public AccountAttribute() {}

@@ -16,10 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PlaidAddAccountActivity"></activity>
+        <activity android:name=".PlaidAddAccountActivity" />
+
         <service
             android:name=".service.AddAccountService"
-            android:exported="false"/>
+            android:exported="false" />
+
     </application>
 
 </manifest>

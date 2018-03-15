@@ -1,9 +1,6 @@
 package com.banter.banter.model.document;
 
-import android.support.annotation.Keep;
-
 import com.banter.banter.model.document.attribute.InstitutionAttribute;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import lombok.Data;
@@ -18,7 +15,8 @@ import java.util.List;
 public class AccountsDocument {
 
     private String userId;
-    @ServerTimestamp private Date createdAt;
+    @ServerTimestamp
+    private Date createdAt;
     private List<InstitutionAttribute> institutions;
 
     public AccountsDocument() {
@@ -32,5 +30,20 @@ public class AccountsDocument {
 
     public void addInstitutionAttribute(InstitutionAttribute institutionAttribute) {
         this.institutions.add(institutionAttribute);
+    }
+
+    public List<String> getAccountTypes() {
+        List<String> accountTypes = new ArrayList<>();
+
+        //For each institution, get a list of the accountTypes in the institution, add them to our list if they aren't already present in our list
+        for (InstitutionAttribute institution : institutions) {
+            List<String> institutionAccountTypes = institution.getAccountTypes();
+            for (String institutionAccountType : institutionAccountTypes) {
+                if (!accountTypes.contains(institutionAccountType)) {
+                    accountTypes.add(institutionAccountType);
+                }
+            }
+        }
+        return accountTypes;
     }
 }

@@ -14,7 +14,8 @@ android {
         debug {
             buildConfigField 'String', 'PLAID_PUBLIC_KEY', '"74912a00575badb2f1b0f1b8bdfde2"'
             buildConfigField 'String', 'PLAID_CLIENT_ID', '"59dd926b4e95b872dbbb6cdf"'
-            buildConfigField 'String', 'PLAID_SECRET_KEY', '"2e17db39ac71ebd3810b276801569e"' //Plaid TODO: Move secret to a better location (i.e. env)
+            buildConfigField 'String', 'PLAID_SECRET_KEY', '"2e17db39ac71ebd3810b276801569e"'
+            //Plaid TODO: Move secret to a better location (i.e. env)
         }
         release {
             minifyEnabled false
@@ -65,7 +66,6 @@ dependencies {
 
     //Plaid for financial information
     compile group: 'com.plaid', name: 'plaid-java', version: '2.2.0'
-
 
     // Third-party libraries
     compileOnly "org.projectlombok:lombok:1.16.20"
