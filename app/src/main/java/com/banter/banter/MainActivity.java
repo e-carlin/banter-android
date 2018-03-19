@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setTitle("Accounts");
+        getSupportActionBar().setTitle("Accounts"); //TODO: Make @string
 
         this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
         this.accountsRepository = new AccountsRepository();
