@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.sectioned_recycler_view)
     RecyclerView recyclerView;
 
-    @BindView(R.id.my_toolbar) //TODO: Rename
+    @BindView(R.id.top_nav_bar) //TODO: Rename
     Toolbar myToolbar;
 
     private AccountsRepository accountsRepository;
