@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.banter.banter">
 
-    <!--android:theme="@style/AppTheme"-->
-
+    <!-- android:theme="@style/AppTheme" -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -24,6 +23,8 @@
             android:name=".service.AddAccountService"
             android:exported="false" />
 
+        <activity android:name=".ShowTransactionsActivity" />
+        <activity android:name=".ChatActivity"></activity>
     </application>
 
 </manifest>

@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_favorites"
+        android:id="@+id/action_accounts"
         android:enabled="true"
         android:title="@string/bottom_nav_accounts_button"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_schedules"
+        android:id="@+id/action_transactions"
         android:enabled="true"
         android:title="@string/bottom_nav_transactions_button"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_music"
+        android:id="@+id/action_chat"
         android:enabled="true"
         android:title="@string/bottom_nav_chat_button"
         app:showAsAction="ifRoom" />
