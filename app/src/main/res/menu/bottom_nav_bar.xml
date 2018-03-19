@@ -4,16 +4,16 @@
     <item
         android:id="@+id/action_favorites"
         android:enabled="true"
-        android:title="One"
+        android:title="@string/bottom_nav_accounts_button"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_schedules"
         android:enabled="true"
-        android:title="Two"
+        android:title="@string/bottom_nav_transactions_button"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_music"
         android:enabled="true"
-        android:title="Three"
+        android:title="@string/bottom_nav_chat_button"
         app:showAsAction="ifRoom" />
 </menu>

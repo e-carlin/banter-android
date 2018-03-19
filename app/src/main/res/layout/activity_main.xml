@@ -10,7 +10,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/top_nav_bar"
         android:layout_width="0dp"
-        android:layout_height="32.0dp"
+        android:layout_height="@dimen/top_nav_height"
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,11 +35,11 @@
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_nav_bar"
         android:layout_width="0dp"
-        android:layout_height="48.0dp"
+        android:layout_height="@dimen/bottom_nav_height"
         android:layout_alignParentBottom="true"
         app:itemBackground="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_navigation_main" />
+        app:menu="@menu/bottom_nav_bar" />
 </android.support.constraint.ConstraintLayout>

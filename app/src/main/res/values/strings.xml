@@ -11,4 +11,12 @@
     <string name="linear_sectioned_recyclerview_horizontal">Linear Sectioned RecyclerView (Horizontal)</string>
     <string name="grid_sectioned_recyclerview">Grid Sectioned RecyclerView</string>
     <string name="show_all">Show All</string>
+
+    <string name="add_account_menu_title">Accounts</string>
+    <string name="add_account_button">Add Account</string>
+
+    <string name="bottom_nav_accounts_button">Accounts</string>
+    <string name="bottom_nav_transactions_button">Transactions</string>
+    <string name="bottom_nav_chat_button">Chat</string>
+
 </resources>

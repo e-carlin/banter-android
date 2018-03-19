@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="bottom_nav_height">48.0dp</dimen>
+    <dimen name="top_nav_height">48.0dp</dimen>
 </resources>

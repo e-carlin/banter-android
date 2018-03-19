@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_add_account"
-        android:title="Add Account"
+        android:title="@string/add_account_button"
         app:showAsAction="ifRoom"/>
 
 </menu>
