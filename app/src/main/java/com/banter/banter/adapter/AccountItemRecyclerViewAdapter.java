@@ -43,7 +43,7 @@ public class AccountItemRecyclerViewAdapter extends RecyclerView.Adapter<Account
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         holder.accountName.setText(accounts.get(position).getName());
-        holder.currentBalance.setText(accounts.get(position).getBalances().getCurrent().toString());
+        holder.currentBalance.setText(String.format("$ %s", accounts.get(position).getBalances().getCurrent().toString()));
     }
 
     @Override
