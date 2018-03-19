@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.top_nav_bar) //TODO: Rename
     Toolbar myToolbar;
 
-    @BindView(R.id.bottom_nav_bar)
-    BottomNavigationView bottomNavBar;
 
     private AccountsRepository accountsRepository;
     private FirebaseUser currentUser;
@@ -56,30 +54,30 @@ public class MainActivity extends AppCompatActivity {
         this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
         this.accountsRepository = new AccountsRepository();
 
-        setupBottomNavBar();
+//        setupBottomNavBar();
         setUpRecyclerView();
         populateRecyclerView();
     }
 
     //TODO: This should be moved into a fragment or something similar
-    private void setupBottomNavBar() {
-        bottomNavBar.setOnNavigationItemSelectedListener(
-                item -> {
-                    switch (item.getItemId()) {
-                        case R.id.action_accounts:
-                            return true; //No-op. This is a reselect. We are already on the accounts activity
-
-                        case R.id.action_transactions:
-                            startActivity(new Intent(MainActivity.this, ShowTransactionsActivity.class));
-                            break;
-
-                        case R.id.action_chat:
-                            startActivity(new Intent(MainActivity.this, ChatActivity.class));
-                            break;
-                    }
-                    return true;
-                });
-    }
+//    private void setupBottomNavBar() {
+//        bottomNavBar.setOnNavigationItemSelectedListener(
+//                item -> {
+//                    switch (item.getItemId()) {
+//                        case R.id.action_accounts:
+//                            return true; //No-op. This is a reselect. We are already on the accounts activity
+//
+//                        case R.id.action_transactions:
+//                            startActivity(new Intent(MainActivity.this, ShowTransactionsActivity.class));
+//                            break;
+//
+//                        case R.id.action_chat:
+//                            startActivity(new Intent(MainActivity.this, ChatActivity.class));
+//                            break;
+//                    }
+//                    return true;
+//                });
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
