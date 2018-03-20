@@ -1,10 +1,7 @@
 package com.banter.banter;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.internal.BottomNavigationMenu;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.sectioned_recycler_view)
     RecyclerView recyclerView;
 
-    @BindView(R.id.top_nav_bar) //TODO: Rename
-    Toolbar myToolbar;
+    @BindView(R.id.top_nav_bar)
+    Toolbar topNavBar;
 
 
     private AccountsRepository accountsRepository;
@@ -48,36 +45,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        setSupportActionBar(myToolbar);
+        setSupportActionBar(topNavBar);
         getSupportActionBar().setTitle(R.string.add_account_menu_title); //TODO: Make @string
 
         this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
         this.accountsRepository = new AccountsRepository();
 
-//        setupBottomNavBar();
         setUpRecyclerView();
         populateRecyclerView();
     }
-
-    //TODO: This should be moved into a fragment or something similar
-//    private void setupBottomNavBar() {
-//        bottomNavBar.setOnNavigationItemSelectedListener(
-//                item -> {
-//                    switch (item.getItemId()) {
-//                        case R.id.action_accounts:
-//                            return true; //No-op. This is a reselect. We are already on the accounts activity
-//
-//                        case R.id.action_transactions:
-//                            startActivity(new Intent(MainActivity.this, ShowTransactionsActivity.class));
-//                            break;
-//
-//                        case R.id.action_chat:
-//                            startActivity(new Intent(MainActivity.this, ChatActivity.class));
-//                            break;
-//                    }
-//                    return true;
-//                });
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
