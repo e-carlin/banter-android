@@ -1,5 +1,7 @@
 package com.banter.banter.model.response;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.HashMap;
 

@@ -3,6 +3,7 @@ package com.banter.banter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,10 +11,14 @@ import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.banter.banter.model.response.PlaidLinkResponse;
-import com.banter.banter.service.AddAccountService;
+import com.banter.banter.api.AccountApi;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
 
 import org.json.JSONObject;
 
@@ -23,7 +28,6 @@ import java.util.HashMap;
 public class PlaidAddAccountActivity extends AppCompatActivity {
     private final static String TAG = "PlaidAddAccountActivity";
 
-    private AddAccountService addAccountService;
 
 
     @Override
@@ -31,7 +35,21 @@ public class PlaidAddAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plaid_add_account);
 
-        addAccountService = new AddAccountService();
+
+        FirebaseAuth.getInstance().getCurrentUser().getIdToken(true)
+                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                    public void onComplete(@NonNull Task<GetTokenResult> task) {
+                        if (task.isSuccessful()) {
+                            String idToken = task.getResult().getToken();
+                            Log.d(TAG, "^^^^^^^^^^^^^^^^ ID TOKEN: "+idToken);
+                        } else {
+                            // Handle error -> task.getException();
+                            Log.d(TAG, "Error retrieving idToken: " + task.getException().getMessage());
+                            Log.d(TAG, task.getException().getStackTrace().toString());
+                        }
+                    }
+                });
+
 
         openPlaidAddAccountWebView();
     }
@@ -60,10 +78,11 @@ public class PlaidAddAccountActivity extends AppCompatActivity {
                     if (action.equals("connected")) {
                         //Success! We got the account details from Plaid
                         Log.e(TAG, "Connected to Link. Starting addAccountService");
-                        PlaidLinkResponse plaidLinkResponse = new PlaidLinkResponse(linkData);
-                        Intent addAccountIntent = new Intent(PlaidAddAccountActivity.this, AddAccountService.class);
-                        addAccountIntent.putExtra("plaidLinkResponse", plaidLinkResponse);
-                        PlaidAddAccountActivity.this.startService(addAccountIntent);
+
+                        AccountApi.addAccount(new JSONObject(linkData),
+                                getApplicationContext(),
+                                getResponseListener(),
+                                getResponseErrorListener());
                         startActivity(new Intent(PlaidAddAccountActivity.this, MainActivity.class));
 
                     } else if (action.equals("exit")) {
@@ -88,6 +107,31 @@ public class PlaidAddAccountActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private Response.Listener<JSONObject> getResponseListener() {
+        return response -> {
+            Log.i(TAG, "Response from adding account is: " + response.toString());
+            Toast.makeText(this, "Success adding account",
+                    Toast.LENGTH_SHORT).show();;
+        };
+    }
+
+    private Response.ErrorListener getResponseErrorListener() {
+        return error -> {
+            //TODO: Maybe handle the add duplicate account different that other possible errors. We'll need to change api to send an error. Currently the API sents status OK with a message that it was a duplicate
+            //TODO: Handle addDuplicateAccountDifferently than other errors
+            Log.e(TAG, "Error sending plaid public token to our api: " + error);
+            try {
+                if (error.networkResponse != null && error.networkResponse.data != null) {
+                    Log.e(TAG, "Error message: " + new String(error.networkResponse.data, "UTF-8"));
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } finally {
+                showSendPublicTokenErrorAlerDialog();
+            }
+        };
     }
 
     private void showSendPublicTokenErrorAlerDialog() {

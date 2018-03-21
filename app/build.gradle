@@ -16,12 +16,14 @@ android {
             buildConfigField 'String', 'PLAID_CLIENT_ID', '"59dd926b4e95b872dbbb6cdf"'
             buildConfigField 'String', 'PLAID_SECRET_KEY', '"2e17db39ac71ebd3810b276801569e"'
             //Plaid TODO: Move secret to a better location (i.e. env)
+            buildConfigField 'String', 'BANTER_BASE_URL', '"http://10.0.2.2:8080"'
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             buildConfigField 'String', 'PLAID_PUBLIC_KEY', '"?????"'
+            buildConfigField 'String', 'BANTER_BASE_URL', '"????"'
         }
     }
     compileOptions {
@@ -63,9 +65,6 @@ dependencies {
 
     //Volley for REST API calls
     compile 'com.android.volley:volley:1.1.0'
-
-    //Plaid for financial information
-    compile group: 'com.plaid', name: 'plaid-java', version: '2.2.0'
 
     // Third-party libraries
     compileOnly "org.projectlombok:lombok:1.16.20"
