@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity {
     Toolbar topNavBar;
 
     private MainActivityViewModel mViewModel;
+    private FirebaseUser currentUser;
 
     private AccountsRepository accountsRepository;
-    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,19 +57,46 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        accountsRepository = new AccountsRepository();
+
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
         // Enable Firestore logging
         FirebaseFirestore.setLoggingEnabled(true);
 
+        // Start sign in if necessary
+//        if (shouldStartSignIn()) {
+//            Log.w(TAG, "^^^^^^^^^^^^^^^^^^^^^ in shoultStartSignIn()");
+//            startSignIn();
+//            return;
+//        }
+
         setSupportActionBar(topNavBar);
         getSupportActionBar().setTitle(R.string.add_account_menu_title); //TODO: Make @string
 
         this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        this.accountsRepository = new AccountsRepository();
+        Log.w(TAG, "************************* ON CREATE. Current user: "+this.currentUser);
 
-        setUpRecyclerView();
-        populateRecyclerView();
+//        populateRecyclerView();
+//        setUpRecyclerView();
+
+        updateUI();
+    }
+
+    private void updateUI() {
+        if(this.currentUser != null) {
+            setUpRecyclerView();
+            populateRecyclerView();
+        }
+        else {
+            if(shouldStartSignIn()) {
+                startSignIn();
+            }
+            else {
+                Log.e(TAG,"Error: the current user is null but we also shouldn't start signing in...");
+            }
+        }
+
     }
 
     @Override
@@ -158,19 +185,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        Log.w(TAG, "^^^^^^^^^^^^^^^^^^^^^ onStart()");
-        // Start sign in if necessary
-        if (shouldStartSignIn()) {
-            Log.w(TAG, "^^^^^^^^^^^^^^^^^^^^^ in shoultStartSignIn()");
-            startSignIn();
-            return;
-        }
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
@@ -186,6 +200,10 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     showSignInErrorDialog(R.string.message_unknown);
                 }
+            }
+            else {
+                this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                updateUI();
             }
         }
     }
