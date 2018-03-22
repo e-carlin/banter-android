@@ -1,7 +1,11 @@
 package com.banter.banter;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,10 +20,16 @@ import com.banter.banter.model.document.AccountsDocument;
 import com.banter.banter.model.document.attribute.AccountAttribute;
 import com.banter.banter.repository.AccountsRepository;
 import com.banter.banter.repository.listener.GetDocumentListener;
+import com.banter.banter.viewModel.MainActivityViewModel;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,6 +38,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    private static final int RC_SIGN_IN = 9001;
 
     @BindView(R.id.sectioned_recycler_view)
     RecyclerView recyclerView;
@@ -35,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.top_nav_bar)
     Toolbar topNavBar;
 
+    private MainActivityViewModel mViewModel;
 
     private AccountsRepository accountsRepository;
     private FirebaseUser currentUser;
@@ -44,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+
+        // Enable Firestore logging
+        FirebaseFirestore.setLoggingEnabled(true);
 
         setSupportActionBar(topNavBar);
         getSupportActionBar().setTitle(R.string.add_account_menu_title); //TODO: Make @string
@@ -118,5 +135,79 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+
+    //=====================
+    //Sign In handling below
+
+    private void startSignIn() {
+        // Sign in with FirebaseUI
+        Intent intent = AuthUI.getInstance().createSignInIntentBuilder()
+                .setAvailableProviders(Collections.singletonList(
+                        new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build())) //TODO: Fix deprecation warnings
+                .setIsSmartLockEnabled(false)
+                .build();
+
+        startActivityForResult(intent, RC_SIGN_IN);
+        mViewModel.setIsSigningIn(true);
+    }
+
+    private boolean shouldStartSignIn() {
+        return (!mViewModel.getIsSigningIn() && FirebaseAuth.getInstance().getCurrentUser() == null);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Log.w(TAG, "^^^^^^^^^^^^^^^^^^^^^ onStart()");
+        // Start sign in if necessary
+        if (shouldStartSignIn()) {
+            Log.w(TAG, "^^^^^^^^^^^^^^^^^^^^^ in shoultStartSignIn()");
+            startSignIn();
+            return;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+            mViewModel.setIsSigningIn(false);
+
+            if (resultCode != RESULT_OK) {
+                if (response == null) {
+                    // User pressed the back button.
+                    finish();
+                } else if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
+                    showSignInErrorDialog(R.string.message_no_network);
+                } else {
+                    showSignInErrorDialog(R.string.message_unknown);
+                }
+            }
+        }
+    }
+
+    private void showSignInErrorDialog(@StringRes int message) {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.title_sign_in_error)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(R.string.option_retry, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startSignIn();
+                    }
+                })
+                .setNegativeButton(R.string.option_exit, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                }).create();
+
+        dialog.show();
     }
 }
