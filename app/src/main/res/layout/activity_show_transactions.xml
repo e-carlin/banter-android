@@ -1,20 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    tools:context="com.banter.banter.PlaidAddAccountActivity">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/top_nav_bar"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/top_nav_height"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_nav_bar" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/friend_list"
+        android:id="@+id/transactions_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="#00000000"/>
+        android:layout_height="0dp"
+        android:layout_marginLeft="0.0dp"
+        android:divider="#00000000"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav_bar_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_nav_bar" />
 
-</RelativeLayout>
+    <fragment
+        android:id="@+id/bottom_nav_bar_fragment"
+        android:name="com.banter.banter.BottomNavBarFragment"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/bottom_nav_height"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_bar" />
+</android.support.constraint.ConstraintLayout>

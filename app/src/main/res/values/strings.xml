@@ -12,14 +12,16 @@
     <string name="grid_sectioned_recyclerview">Grid Sectioned RecyclerView</string>
     <string name="show_all">Show All</string>
 
+    <!--Accounts-->
     <string name="add_account_menu_title">Accounts</string>
     <string name="add_account_button">Add Account</string>
 
+    <!--Bottom Nav-->
     <string name="bottom_nav_accounts_button">Accounts</string>
     <string name="bottom_nav_transactions_button">Transactions</string>
     <string name="bottom_nav_chat_button">Chat</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--Transactions-->
+    <string name="transactions_menu_title">Transactions</string>
 
 </resources>

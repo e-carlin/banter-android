@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,19 +19,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ShowTransactionsActivity extends AppCompatActivity {
     private final String TAG = "ShowTransactionsAct";
 
+    @BindView(R.id.top_nav_bar)
+    Toolbar topNavBar;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
-
-    @BindView(R.id.friend_list)
-    RecyclerView friendList;
+    @BindView(R.id.transactions_recycler)
+    RecyclerView transactionsList;
 
     private FirebaseFirestore db;
     private FirestoreRecyclerAdapter adapter;
@@ -47,8 +47,11 @@ public class ShowTransactionsActivity extends AppCompatActivity {
     }
 
     private void init(){
+        setSupportActionBar(topNavBar);
+        getSupportActionBar().setTitle(R.string.transactions_menu_title);
+
         linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-        friendList.setLayoutManager(linearLayoutManager);
+        transactionsList.setLayoutManager(linearLayoutManager);
         db = FirebaseFirestore.getInstance();
     }
 
@@ -59,17 +62,12 @@ public class ShowTransactionsActivity extends AppCompatActivity {
                 .setQuery(query, TransactionDocument.class)
                 .build();
 
-        List<TransactionDocument> docs = response.getSnapshots();
-        Log.d(TAG, "Size: "+docs.size());
-        for(TransactionDocument document : docs) {
-            Log.d(TAG, document.toString());
-        }
-
         adapter = new FirestoreRecyclerAdapter<TransactionDocument, TransactionsHolder>(response) {
             @Override
             public void onBindViewHolder(TransactionsHolder holder, int position, TransactionDocument model) {
                 progressBar.setVisibility(View.GONE);
                 holder.textName.setText(model.getName());
+                holder.amount.setText(String.format("$ %s",model.getAmount()));
             }
 
             @Override
@@ -87,18 +85,15 @@ public class ShowTransactionsActivity extends AppCompatActivity {
         };
 
         adapter.notifyDataSetChanged();
-        friendList.setAdapter(adapter);
+        transactionsList.setAdapter(adapter);
     }
 
     public class TransactionsHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.transaction_name)
+        @BindView(R.id.text_name)
         TextView textName;
-//        @BindView(R.id.image)
-//        CircleImageView imageView;
-//        @BindView(R.id.title)
-//        TextView textTitle;
-//        @BindView(R.id.company)
-//        TextView textCompany;
+        @BindView(R.id.text_amount)
+        TextView amount;
+
 
         public TransactionsHolder(View itemView) {
             super(itemView);

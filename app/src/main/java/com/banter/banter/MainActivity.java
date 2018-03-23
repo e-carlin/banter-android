@@ -70,21 +70,10 @@ public class MainActivity extends AppCompatActivity {
         // Enable Firestore logging
         FirebaseFirestore.setLoggingEnabled(true);
 
-        // Start sign in if necessary
-//        if (shouldStartSignIn()) {
-//            Log.w(TAG, "^^^^^^^^^^^^^^^^^^^^^ in shoultStartSignIn()");
-//            startSignIn();
-//            return;
-//        }
-
         setSupportActionBar(topNavBar);
-        getSupportActionBar().setTitle(R.string.add_account_menu_title); //TODO: Make @string
+        getSupportActionBar().setTitle(R.string.add_account_menu_title);
 
         this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        Log.w(TAG, "************************* ON CREATE. Current user: "+this.currentUser);
-
-//        populateRecyclerView();
-//        setUpRecyclerView();
 
         updateUI();
     }
