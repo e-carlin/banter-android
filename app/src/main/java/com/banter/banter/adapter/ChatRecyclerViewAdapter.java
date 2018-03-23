@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.banter.banter.ChatActivity;
 import com.banter.banter.R;
 import com.banter.banter.model.document.ChatDocument;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -19,7 +18,7 @@ import butterknife.ButterKnife;
  * Created by evan.carlin on 3/23/2018.
  */
 
-public class ChatRecyclerViewAdapter extends FirestoreRecyclerAdapter<ChatDocument, ChatRecyclerViewAdapter.ChatHolder>{
+public class ChatRecyclerViewAdapter extends FirestoreRecyclerAdapter<ChatDocument, ChatRecyclerViewAdapter.MessageHolder>{
 
 
     public ChatRecyclerViewAdapter(FirestoreRecyclerOptions<ChatDocument> options) {
@@ -27,28 +26,28 @@ public class ChatRecyclerViewAdapter extends FirestoreRecyclerAdapter<ChatDocume
     }
 
     @Override
-    public void onBindViewHolder(ChatHolder holder, int position, ChatDocument model) {
+    public void onBindViewHolder(MessageHolder holder, int position, ChatDocument model) {
         holder.messageTextView.setText(model.getMessage());
         holder.messengerTextView.setText(model.getUserId());
     }
 
     @Override
-    public ChatHolder onCreateViewHolder(ViewGroup group, int i) {
+    public MessageHolder onCreateViewHolder(ViewGroup group, int i) {
         View view = LayoutInflater.from(group.getContext())
                 .inflate(R.layout.item_message, group, false);
 
-        return new ChatHolder(view);
+        return new MessageHolder(view);
     }
 
 
-    public class ChatHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.messageTextView)
+    public class MessageHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.text_view_message)
         TextView messageTextView;
-        @BindView(R.id.messengerTextView)
+        @BindView(R.id.text_view_messenger)
         TextView messengerTextView;
 
 
-        public ChatHolder(View itemView) {
+        public MessageHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

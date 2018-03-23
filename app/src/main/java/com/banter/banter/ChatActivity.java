@@ -58,17 +58,14 @@ public class ChatActivity extends AppCompatActivity {
 
         this.chatRepository = new ChatRepository();
 
-        init();
-        getFriendList();
-    }
-
-    private void init(){
-
         linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         chatRecycler.setLayoutManager(linearLayoutManager);
         db = FirebaseFirestore.getInstance();
 
         this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        getFriendList();
     }
 
     private void getFriendList(){

@@ -19,14 +19,14 @@
             android:layout_marginLeft="10dp">
 
             <TextView
-                android:id="@+id/messageTextView"
+                android:id="@+id/text_view_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <TextView
-                android:id="@+id/messengerTextView"
+                android:id="@+id/text_view_messenger"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
