@@ -1,8 +1,11 @@
 package com.banter.banter.model.document;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
 import java.util.Date;
 
 import lombok.Data;
+import lombok.NonNull;
 import lombok.ToString;
 
 /**
@@ -12,9 +15,17 @@ import lombok.ToString;
 @Data
 @ToString
 public class ChatDocument {
+    @NonNull
     private String userId;
+    @NonNull
     private String message;
+    @ServerTimestamp
     private Date createdAt;
 
     public ChatDocument() {}
+
+    public ChatDocument(String message, String userId) {
+        this.message = message;
+        this.userId = userId;
+    }
 }

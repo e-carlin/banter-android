@@ -15,6 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.banter.banter.adapter.AccountsSectionRecyclerViewAdapter;
 import com.banter.banter.model.document.AccountsDocument;
@@ -74,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.add_account_menu_title);
 
         this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
 
         updateUI();
     }

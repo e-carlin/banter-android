@@ -113,7 +113,7 @@ public class PlaidAddAccountActivity extends AppCompatActivity {
         return response -> {
             Log.i(TAG, "Response from adding account is: " + response.toString());
             Toast.makeText(this, "Success adding account",
-                    Toast.LENGTH_SHORT).show();;
+                    Toast.LENGTH_SHORT).show();
         };
     }
 

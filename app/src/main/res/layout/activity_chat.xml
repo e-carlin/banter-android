@@ -36,14 +36,14 @@
             android:layout_height="match_parent"/>
 
         <EditText
-            android:id="@+id/messageEditText"
+            android:id="@+id/edit_text_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/sendButton"
+            android:id="@+id/button_send_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
