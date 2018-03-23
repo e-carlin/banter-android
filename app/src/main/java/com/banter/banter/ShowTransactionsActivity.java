@@ -1,6 +1,5 @@
 package com.banter.banter;
 
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +17,8 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,29 +59,25 @@ public class ShowTransactionsActivity extends AppCompatActivity {
                 .setQuery(query, TransactionDocument.class)
                 .build();
 
-        adapter = new FirestoreRecyclerAdapter<TransactionDocument, FriendsHolder>(response) {
+        List<TransactionDocument> docs = response.getSnapshots();
+        Log.d(TAG, "Size: "+docs.size());
+        for(TransactionDocument document : docs) {
+            Log.d(TAG, document.toString());
+        }
+
+        adapter = new FirestoreRecyclerAdapter<TransactionDocument, TransactionsHolder>(response) {
             @Override
-            public void onBindViewHolder(FriendsHolder holder, int position, TransactionDocument model) {
+            public void onBindViewHolder(TransactionsHolder holder, int position, TransactionDocument model) {
                 progressBar.setVisibility(View.GONE);
                 holder.textName.setText(model.getName());
-//                holder.textTitle.setText(model.getTitle());
-//                holder.textCompany.setText(model.getCompany());
-//                Glide.with(getApplicationContext())
-//                        .load(model.getImage())
-//                        .into(holder.imageView);
-//
-//                holder.itemView.setOnClickListener(v -> {
-//                    Snackbar.make(friendList, model.getName()+", "+model.getTitle()+" at "+model.getCompany(), Snackbar.LENGTH_LONG)
-//                            .setAction("Action", null).show();
-//                });
             }
 
             @Override
-            public FriendsHolder onCreateViewHolder(ViewGroup group, int i) {
+            public TransactionsHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
                         .inflate(R.layout.transaction_item, group, false);
 
-                return new FriendsHolder(view);
+                return new TransactionsHolder(view);
             }
 
             @Override
@@ -93,8 +90,8 @@ public class ShowTransactionsActivity extends AppCompatActivity {
         friendList.setAdapter(adapter);
     }
 
-    public class FriendsHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.name)
+    public class TransactionsHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.transaction_name)
         TextView textName;
 //        @BindView(R.id.image)
 //        CircleImageView imageView;
@@ -103,7 +100,7 @@ public class ShowTransactionsActivity extends AppCompatActivity {
 //        @BindView(R.id.company)
 //        TextView textCompany;
 
-        public FriendsHolder(View itemView) {
+        public TransactionsHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

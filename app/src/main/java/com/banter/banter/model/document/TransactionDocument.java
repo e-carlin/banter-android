@@ -18,15 +18,17 @@ public class TransactionDocument {
     private List<String> categories; //TODO: Should categories be an enum??
     private String categoryId;
     private String transactionDate;
-    private LocationMeta locationMeta;
     private String name;
     private String originalDescription;
-    private PaymentMeta paymentMeta;
     private boolean pending;
     private String pendingTransactionId;
     private String transactionId;
     private String transactionType; //TODO: enum?
     private String accountOwner;
+
+    private LocationMeta locationMeta;
+    private PaymentMeta paymentMeta;
+
     @ServerTimestamp
     private Date createdAt; //Recommended to be stored as a long https://stackoverflow.com/questions/48473473/save-object-of-localdate-java-time-in-firebase-database
 
@@ -51,7 +53,7 @@ public class TransactionDocument {
 
     @Data
     @ToString
-    public class PaymentMeta {
+    public static final class PaymentMeta {
 
         private String byOrderOf;
         private String payee;
