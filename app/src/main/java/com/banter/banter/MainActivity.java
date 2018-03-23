@@ -3,7 +3,6 @@ package com.banter.banter;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
@@ -15,13 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.banter.banter.adapter.AccountsSectionRecyclerViewAdapter;
+import com.banter.banter.model.document.AccountTypeGroup;
 import com.banter.banter.model.document.AccountsDocument;
-import com.banter.banter.model.document.TransactionDocument;
 import com.banter.banter.model.document.attribute.AccountAttribute;
 import com.banter.banter.repository.AccountsRepository;
 import com.banter.banter.repository.listener.GetDocumentListener;
@@ -29,13 +25,9 @@ import com.banter.banter.viewModel.MainActivityViewModel;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -120,16 +112,16 @@ public class MainActivity extends AppCompatActivity {
                 AccountsDocument accountsDocument = (AccountsDocument) document;
                 Log.e(TAG, "******************************* Success getting document");
 
-                List<SectionModel> sectionModels = new ArrayList<>();
+                List<AccountTypeGroup> accountTypeGroups = new ArrayList<>();
 
                 HashMap<String, List<AccountAttribute>> accountsGroupedByType = accountsDocument.getAccountsGroupedByType();
 
                 for(String key : accountsGroupedByType.keySet()) {
                     String label = key.substring(0,1).toUpperCase() + key.substring(1).toLowerCase();
-                    sectionModels.add(new SectionModel(label, accountsGroupedByType.get(key)));
+                    accountTypeGroups.add(new AccountTypeGroup(label, accountsGroupedByType.get(key)));
                 }
 
-                AccountsSectionRecyclerViewAdapter adapter = new AccountsSectionRecyclerViewAdapter(MainActivity.this, sectionModels);
+                AccountsSectionRecyclerViewAdapter adapter = new AccountsSectionRecyclerViewAdapter(MainActivity.this, accountTypeGroups);
                 recyclerView.setAdapter(adapter);
 
             }

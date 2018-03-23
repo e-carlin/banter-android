@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.banter.banter.adapter.TransactionsRecyclerViewAdapter;
 import com.banter.banter.model.document.TransactionDocument;
 import com.banter.banter.repository.TransactionsRepository;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -53,7 +54,7 @@ public class TransactionsActivity extends AppCompatActivity {
 
         linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         transactionsList.setLayoutManager(linearLayoutManager);
-        db = FirebaseFirestore.getInstance();
+        this.db = FirebaseFirestore.getInstance();
 
         this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -66,43 +67,10 @@ public class TransactionsActivity extends AppCompatActivity {
                 .setQuery(transactionsRepository.getTransactionsQuery(currentUser.getUid()), TransactionDocument.class)
                 .build();
 
-        adapter = new FirestoreRecyclerAdapter<TransactionDocument, TransactionsHolder>(response) {
-            @Override
-            public void onBindViewHolder(TransactionsHolder holder, int position, TransactionDocument model) {
-                progressBar.setVisibility(View.GONE);
-                holder.textName.setText(model.getName());
-                holder.amount.setText(String.format("$ %s",model.getAmount()));
-            }
-
-            @Override
-            public TransactionsHolder onCreateViewHolder(ViewGroup group, int i) {
-                View view = LayoutInflater.from(group.getContext())
-                        .inflate(R.layout.transaction_item, group, false);
-
-                return new TransactionsHolder(view);
-            }
-
-            @Override
-            public void onError(FirebaseFirestoreException e) {
-                Log.e("error", e.getMessage());
-            }
-        };
+        adapter = new TransactionsRecyclerViewAdapter(response, this);
 
         adapter.notifyDataSetChanged();
         transactionsList.setAdapter(adapter);
-    }
-
-    public class TransactionsHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.text_name)
-        TextView textName;
-        @BindView(R.id.text_amount)
-        TextView amount;
-
-
-        public TransactionsHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
     }
 
     @Override

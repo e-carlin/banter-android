@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.banter.banter.model.document.AccountTypeGroup;
 import com.banter.banter.R;
-import com.banter.banter.SectionModel;
 
 import java.util.List;
 
@@ -33,11 +33,11 @@ public class AccountsSectionRecyclerViewAdapter extends RecyclerView.Adapter<Acc
     }
 
     private Context context;
-    private List<SectionModel> sectionModels;
+    private List<AccountTypeGroup> accountTypeGroups;
 
-    public AccountsSectionRecyclerViewAdapter(Context context, List<SectionModel> sectionModels) {
+    public AccountsSectionRecyclerViewAdapter(Context context, List<AccountTypeGroup> accountTypeGroups) {
         this.context = context;
-        this.sectionModels = sectionModels;
+        this.accountTypeGroups = accountTypeGroups;
     }
 
     @Override
@@ -48,8 +48,8 @@ public class AccountsSectionRecyclerViewAdapter extends RecyclerView.Adapter<Acc
 
     @Override
     public void onBindViewHolder(SectionViewHolder holder, int position) {
-        final SectionModel sectionModel = sectionModels.get(position);
-        holder.sectionLabel.setText(sectionModel.getAccountType());
+        final AccountTypeGroup accountTypeGroup = accountTypeGroups.get(position);
+        holder.sectionLabel.setText(accountTypeGroup.getAccountType());
 
         //recycler view for items
         holder.itemRecyclerView.setHasFixedSize(true);
@@ -58,17 +58,17 @@ public class AccountsSectionRecyclerViewAdapter extends RecyclerView.Adapter<Acc
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.itemRecyclerView.setLayoutManager(linearLayoutManager);
 
-        AccountItemRecyclerViewAdapter adapter = new AccountItemRecyclerViewAdapter(context, sectionModel.getAccounts());
+        AccountItemRecyclerViewAdapter adapter = new AccountItemRecyclerViewAdapter(context, accountTypeGroup.getAccounts());
         holder.itemRecyclerView.setAdapter(adapter);
 
         //show toast on click of show all button
-//        holder.showAllButton.setOnClickListener(v -> Toast.makeText(context, "You clicked on Show All of : " + sectionModel.getAccountType(), Toast.LENGTH_SHORT).show());
+//        holder.showAllButton.setOnClickListener(v -> Toast.makeText(context, "You clicked on Show All of : " + accountTypeGroup.getAccountType(), Toast.LENGTH_SHORT).show());
 
     }
 
     @Override
     public int getItemCount() {
-        return sectionModels.size();
+        return accountTypeGroups.size();
     }
 
 
