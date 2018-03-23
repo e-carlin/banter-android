@@ -19,11 +19,14 @@ import android.widget.TextView;
 
 import com.banter.banter.model.document.ChatDocument;
 import com.banter.banter.model.document.ChatDocument;
+import com.banter.banter.repository.ChatRepository;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -38,9 +41,11 @@ public class ChatActivity extends AppCompatActivity {
     @BindView(R.id.chat_recycler)
     RecyclerView chatRecycler;
 
+    private FirebaseUser currentUser;
     private FirebaseFirestore db;
     private FirestoreRecyclerAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
+    private ChatRepository chatRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,8 @@ public class ChatActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         FirebaseFirestore.setLoggingEnabled(true);
+
+        this.chatRepository = new ChatRepository();
 
         init();
         getFriendList();
@@ -59,13 +66,14 @@ public class ChatActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         chatRecycler.setLayoutManager(linearLayoutManager);
         db = FirebaseFirestore.getInstance();
+
+        this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     private void getFriendList(){
-        Query query = db.collection("chats"); //TODO: Limit to only user chats, oder them,...
 
         FirestoreRecyclerOptions<ChatDocument> response = new FirestoreRecyclerOptions.Builder<ChatDocument>()
-                .setQuery(query, ChatDocument.class)
+                .setQuery(this.chatRepository.getChatsQuery(this.currentUser.getUid()), ChatDocument.class)
                 .build();
 
         adapter = new FirestoreRecyclerAdapter<ChatDocument, ChatActivity.ChatHolder>(response) {

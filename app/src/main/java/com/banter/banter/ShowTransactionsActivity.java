@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.banter.banter.model.document.TransactionDocument;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -32,6 +34,7 @@ public class ShowTransactionsActivity extends AppCompatActivity {
     @BindView(R.id.transactions_recycler)
     RecyclerView transactionsList;
 
+    private FirebaseUser currentUser;
     private FirebaseFirestore db;
     private FirestoreRecyclerAdapter adapter;
     LinearLayoutManager linearLayoutManager;
@@ -53,6 +56,8 @@ public class ShowTransactionsActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         transactionsList.setLayoutManager(linearLayoutManager);
         db = FirebaseFirestore.getInstance();
+
+        this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     private void getFriendList(){
