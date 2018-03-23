@@ -1,13 +1,9 @@
 package com.banter.banter;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +33,8 @@ public class BottomNavBarFragment extends Fragment {
                             break; //No-op. This is a reselect. We are already on the accounts activity
 
                         case R.id.action_transactions:
-                            if (!(getActivity() instanceof ShowTransactionsActivity)) {
-                                startActivity(new Intent(getActivity(), ShowTransactionsActivity.class));
+                            if (!(getActivity() instanceof TransactionsActivity)) {
+                                startActivity(new Intent(getActivity(), TransactionsActivity.class));
                             }
                             break;
 

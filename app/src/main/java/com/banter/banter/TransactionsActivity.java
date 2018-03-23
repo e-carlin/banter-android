@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.banter.banter.model.document.TransactionDocument;
+import com.banter.banter.repository.TransactionsRepository;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,7 +25,7 @@ import com.google.firebase.firestore.Query;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ShowTransactionsActivity extends AppCompatActivity {
+public class TransactionsActivity extends AppCompatActivity {
     private final String TAG = "ShowTransactionsAct";
 
     @BindView(R.id.top_nav_bar)
@@ -37,19 +38,16 @@ public class ShowTransactionsActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     private FirebaseFirestore db;
     private FirestoreRecyclerAdapter adapter;
-    LinearLayoutManager linearLayoutManager;
+    private LinearLayoutManager linearLayoutManager;
+    private TransactionsRepository transactionsRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_transactions);
         ButterKnife.bind(this);
+        this.transactionsRepository = new TransactionsRepository();
 
-        init();
-        getFriendList();
-    }
-
-    private void init(){
         setSupportActionBar(topNavBar);
         getSupportActionBar().setTitle(R.string.transactions_menu_title);
 
@@ -58,13 +56,14 @@ public class ShowTransactionsActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        setupTransactionsRecycler();
     }
 
-    private void getFriendList(){
-        Query query = db.collection("transactions");
+    private void setupTransactionsRecycler(){
 
         FirestoreRecyclerOptions<TransactionDocument> response = new FirestoreRecyclerOptions.Builder<TransactionDocument>()
-                .setQuery(query, TransactionDocument.class)
+                .setQuery(transactionsRepository.getTransactionsQuery(currentUser.getUid()), TransactionDocument.class)
                 .build();
 
         adapter = new FirestoreRecyclerAdapter<TransactionDocument, TransactionsHolder>(response) {

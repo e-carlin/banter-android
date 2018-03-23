@@ -23,7 +23,7 @@
             android:name=".service.AddAccountService"
             android:exported="false" />
 
-        <activity android:name=".ShowTransactionsActivity" />
+        <activity android:name=".TransactionsActivity" />
         <activity android:name=".ChatActivity"></activity>
     </application>
 
