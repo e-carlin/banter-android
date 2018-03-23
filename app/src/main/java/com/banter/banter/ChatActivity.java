@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.banter.banter.adapter.ChatRecyclerViewAdapter;
 import com.banter.banter.model.document.ChatDocument;
 import com.banter.banter.model.document.ChatDocument;
 import com.banter.banter.repository.ChatRepository;
@@ -76,43 +77,12 @@ public class ChatActivity extends AppCompatActivity {
                 .setQuery(this.chatRepository.getChatsQuery(this.currentUser.getUid()), ChatDocument.class)
                 .build();
 
-        adapter = new FirestoreRecyclerAdapter<ChatDocument, ChatActivity.ChatHolder>(response) {
-            @Override
-            public void onBindViewHolder(ChatActivity.ChatHolder holder, int position, ChatDocument model) {
-                holder.messageTextView.setText(model.getMessage());
-                holder.messengerTextView.setText(model.getUserId());
-            }
-
-            @Override
-            public ChatActivity.ChatHolder onCreateViewHolder(ViewGroup group, int i) {
-                View view = LayoutInflater.from(group.getContext())
-                        .inflate(R.layout.item_message, group, false);
-
-                return new ChatActivity.ChatHolder(view);
-            }
-
-            @Override
-            public void onError(FirebaseFirestoreException e) {
-                Log.e("error", e.getMessage());
-            }
-        };
+        adapter = new ChatRecyclerViewAdapter(response);
 
         adapter.notifyDataSetChanged();
         chatRecycler.setAdapter(adapter);
     }
 
-    public class ChatHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.messageTextView)
-        TextView messageTextView;
-        @BindView(R.id.messengerTextView)
-        TextView messengerTextView;
-
-
-        public ChatHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
 
     @Override
     public void onStart() {
