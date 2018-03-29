@@ -36,7 +36,7 @@ public class ChatRepository {
     }
 
     public void sendMessage(String message, String userId, Context ctx) {
-        ChatDocument chatDocument = new ChatDocument(message, userId);
+        ChatDocument chatDocument = new ChatDocument(message, userId, true);
        Task<DocumentReference> ref = this.chatCollection.add(chatDocument);
        ref.addOnFailureListener(e -> {
            Log.e(TAG, "There was an error sending the chat message: "+e.getMessage());

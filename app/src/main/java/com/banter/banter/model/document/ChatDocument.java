@@ -19,13 +19,16 @@ public class ChatDocument {
     private String userId;
     @NonNull
     private String message;
+    @NonNull
+    private boolean messageIsFromUser;
     @ServerTimestamp
     private Date createdAt;
 
     public ChatDocument() {}
 
-    public ChatDocument(String message, String userId) {
+    public ChatDocument(String message, String userId, boolean messageIsFromUser) {
         this.message = message;
         this.userId = userId;
+        this.messageIsFromUser = messageIsFromUser;
     }
 }
