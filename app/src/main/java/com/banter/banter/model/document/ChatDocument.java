@@ -21,6 +21,8 @@ public class ChatDocument {
     private String message;
     @NonNull
     private boolean messageIsFromUser;
+    @NonNull
+    private boolean botHasReplied;
     @ServerTimestamp
     private Date createdAt;
 
