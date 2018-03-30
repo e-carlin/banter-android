@@ -177,7 +177,7 @@ public class PlaidAddAccountActivity extends AppCompatActivity {
         linkInitializeOptions.put("apiVersion", "v2");
         linkInitializeOptions.put("env", "sandbox");
         linkInitializeOptions.put("clientName", "Test App");
-//        linkInitializeOptions.put("webhook", "http://requestb.in");
+//        linkInitializeOptions.put("webhook", "http://requestb.in"); //TODO: Get the URL from the build config
         linkInitializeOptions.put("baseUrl", "https://cdn.plaid.com/link/v2/stable/link.html");
         // If initializing Link in PATCH / update mode, also provide the public_token
         // linkInitializeOptions.put("public_token", "PUBLIC_TOKEN")
