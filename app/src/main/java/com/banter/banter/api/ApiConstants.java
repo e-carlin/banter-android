@@ -17,4 +17,7 @@ public class ApiConstants {
     /* Account endpoints */
     final static String ACCOUNT_ENDPOINT = BANTER_BASE_URL + "/accounts";
     final static String ADD_ACCOUNT_ENDPOINT = ACCOUNT_ENDPOINT + "/add";
+
+    /* Plaid webhook endpoints */
+    public final static String PLAID_WEBHOOK_ENDPOINT = BANTER_BASE_URL + "/plaid/webhook";
 }

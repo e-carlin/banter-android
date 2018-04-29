@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.banter.banter.api.AccountApi;
+import com.banter.banter.api.ApiConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -176,8 +177,8 @@ public class PlaidAddAccountActivity extends AppCompatActivity {
         linkInitializeOptions.put("product", "transactions");
         linkInitializeOptions.put("apiVersion", "v2");
         linkInitializeOptions.put("env", "sandbox");
-        linkInitializeOptions.put("clientName", "Test App");
-//        linkInitializeOptions.put("webhook", "http://requestb.in"); //TODO: Get the URL from the build config
+        linkInitializeOptions.put("clientName", "Banter");
+        linkInitializeOptions.put("webhook", ApiConstants.PLAID_WEBHOOK_ENDPOINT); //TODO: Get the URL from the build config
         linkInitializeOptions.put("baseUrl", "https://cdn.plaid.com/link/v2/stable/link.html");
         // If initializing Link in PATCH / update mode, also provide the public_token
         // linkInitializeOptions.put("public_token", "PUBLIC_TOKEN")

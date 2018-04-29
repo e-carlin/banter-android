@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.banter.banter"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -18,15 +18,18 @@ android {
             //Plaid TODO: Move secret to a better location (i.e. env)
 //            buildConfigField 'String', 'BANTER_BASE_URL', '"http://10.0.2.2:8080"'
             buildConfigField 'String', 'BANTER_BASE_URL', '"https://pacific-shore-53243.herokuapp.com/"'
-            buildConfigField 'String', 'PLAID_WEBHOOK_URL', '""'
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            buildConfigField 'String', 'PLAID_PUBLIC_KEY', '"?????"'
-            buildConfigField 'String', 'BANTER_BASE_URL', '"????"'
-            buildConfigField 'String', 'PLAID_WEBHOOK_URL', '"http://10.0.2.2:8080"'
+            //TODO: All values in here should be changed for real release
+            buildConfigField 'String', 'PLAID_PUBLIC_KEY', '"74912a00575badb2f1b0f1b8bdfde2"'
+            buildConfigField 'String', 'PLAID_CLIENT_ID', '"59dd926b4e95b872dbbb6cdf"'
+            buildConfigField 'String', 'PLAID_SECRET_KEY', '"2e17db39ac71ebd3810b276801569e"'
+            //Plaid TODO: Move secret to a better location (i.e. env)
+//            buildConfigField 'String', 'BANTER_BASE_URL', '"http://10.0.2.2:8080"'
+            buildConfigField 'String', 'BANTER_BASE_URL', '"https://pacific-shore-53243.herokuapp.com/"'
         }
     }
     compileOptions {
